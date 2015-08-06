@@ -57,11 +57,12 @@ Color.prototype.toString = function toString () {
 
 Color.prototype.toHexString = function toHexString () {
     var r = this.r;
-        r = ( r > 0x0F ? (r & 0xFF).toString(16) : "0" + (r & 0xFF).toString(16) );
     var g = this.g;
-        g = ( g > 0x0F ? (g & 0xFF).toString(16) : "0" + (g & 0xFF).toString(16) );
     var b = this.b;
-        b = ( b > 0x0F ? (b & 0xFF).toString(16) : "0" + (b & 0xFF).toString(16) );
+
+    r = ( r > 0x0F ? r.toString(16) : "0" + r.toString(16) );
+    g = ( g > 0x0F ? g.toString(16) : "0" + g.toString(16) );
+    b = ( b > 0x0F ? b.toString(16) : "0" + b.toString(16) );
 
     return "#" + (r + g + b);
 }
