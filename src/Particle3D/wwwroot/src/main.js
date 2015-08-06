@@ -5,7 +5,7 @@ var Utils = require("./Utils");
 var Bresenham = require("./Bresenham");
 
 
-/// 实例对象;
+/// 舞台对象;
 var stage = document.createElement("canvas");
 var stageContext = stage.getContext("2d");
 
@@ -14,11 +14,11 @@ var stageContext = stage.getContext("2d");
 stage.width  = document.body.clientWidth;
 stage.height = document.body.clientHeight;
 
-
-Utils.perlinNoise(stage);
-
 var mouseX = 0;
 var mouseY = 0;
+var canvas = Utils.createCanvas(stage.width, stage.height);
+var canvasContext = canvas.getContext("2d");
+
 
 stage.addEventListener("mousedown", function( evt ) {
     if ( mouseX <= 0 && mouseY <= 0 ) {

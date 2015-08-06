@@ -27,6 +27,28 @@ Utils.randomNoise = function randomNoise( canvas, x, y, w, h, a ) {
 }
 
 
+Utils.colorNoise = function colorNoise( canvas, x, y, w, h, a ) {
+    var x = x || 0,
+        y = y || 0,
+        w = w || canvas.width,
+        h = h || canvas.height,
+        a = a || 0xFF,
+        context = canvas.getContext("2d"),
+        dataImg = context.getImageData(x, y, w, h),
+        dataPix = dataImg.data;
+
+    for ( var i = 0, n = dataPix.length; i < n; ) {
+        dataPix[i++] = (Math.random() * 0xFF) >> 0;
+        dataPix[i++] = (Math.random() * 0xFF) >> 0;
+        dataPix[i++] = (Math.random() * 0xFF) >> 0;
+        dataPix[i++] = a;
+    }
+
+    context.putImageData( dataImg, x, y );
+    return canvas;
+}
+
+
 Utils.perlinNoise = function perlinNoise( canvas, noise ) {
     var noise = noise || Utils.randomNoise(Utils.createCanvas(canvas.width, canvas.height));
     var context = canvas.getContext("2d");
