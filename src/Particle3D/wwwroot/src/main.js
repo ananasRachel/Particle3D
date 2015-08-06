@@ -3,6 +3,7 @@ define(function( require, exports, module ) { "use strict";
 var Color = require("./Color");
 var Utils = require("./Utils");
 var Bresenham = require("./Bresenham");
+var getTimer = require("./getTimer");
 
 
 /// 舞台对象;
