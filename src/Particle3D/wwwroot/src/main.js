@@ -1,27 +1,42 @@
 ﻿/// <reference path='../lib/requirejs/require.js' />
 define(function( require, exports, module ) { "use strict";
 var Color = require("./Color");
+var Utils = require("./Utils");
+var Bresenham = require("./Bresenham");
+
+
+/// 实例对象;
+var stage = document.createElement("canvas");
+var stageContext = stage.getContext("2d");
+
+
+/// 舞台大小;
+stage.width  = document.body.clientWidth;
+stage.height = document.body.clientHeight;
+
+
+Utils.perlinNoise(stage);
+
+var mouseX = 0;
+var mouseY = 0;
+
+stage.addEventListener("mousedown", function( evt ) {
+    if ( mouseX <= 0 && mouseY <= 0 ) {
+        mouseX = evt.clientX;
+        mouseY = evt.clientY;
+    }
+    else {
+        var dataImg = stageContext.getImageData(0, 0, stage.width, stage.height); 
+        var color = (Math.random() * 0xFFFFFF) & 0xFFFFFF;
+        var alpha = 0xFF;
+
+        Bresenham.draw(dataImg, mouseX, mouseY, mouseX = evt.clientX, mouseY = evt.clientY, color, alpha);
+        stageContext.putImageData(dataImg, 0, 0);
+    }
+});
 
 
 
-/// TestColor;
-var color = new Color();
-
-    color.hsv(0, 1, 1); 
-    console.log( color.toString() );
-
-    //color.hsv(120, 0.5, 1); 
-    console.log( color.toString() );
-
-    //color.hsv(240, 1, 0.5); 
-    console.log( color.toString() );
-
-    //color.hsv(300, 1, 0.5); 
-    console.log( color.toString() );
-    console.log( "xxxxxxx:", color.toHexString() );
-    console.log( "xxxxxxx:", color.toRGBString() );
-
-document.body.style.background = color.toHexString();
 
 
 
@@ -34,6 +49,6 @@ document.body.style.background = color.toHexString();
 
 
 
-
-
+/// 将舞台对象加入 `DOM` 显示对象列表;
+document.body.appendChild(stage);
 });

@@ -3,7 +3,7 @@ define(function( require, exports, module ) { "use strict";
 
 
 var Color = function Color( value ) {
-    /// https://zh.wikipedia.org/wiki/HSL%E5%92%8CHSV%E8%89%B2%E5%BD%A9%E7%A9%BA%E9%97%B4
+    /// Ref: https://zh.wikipedia.org/wiki/HSL%E5%92%8CHSV%E8%89%B2%E5%BD%A9%E7%A9%BA%E9%97%B4
     this.value = value || 0;
 }
 
@@ -75,7 +75,6 @@ Color.prototype.toRGBString = function toRGBString () {
 
 Object.defineProperties(Color.prototype, {
     r: {
-        enumerable: true,
         get: function () {
             return (this.value >> 16) & 0xFF;
         },
