@@ -12,11 +12,16 @@ var World = function World( canvas, context ) {
     this.length = 0;
     this.particles = [];
     this.scaleOfVector = 1;
-    this.focusLength = 800;
+    this.focusLength = 8000;
     this.zNear = 0;
     this.zFar  = 0;
     this.xOrigin = this.canvas.width  * 0.5;
     this.yOrigin = this.canvas.height * 0.5;
+    this.vertices = [];
+    this.index = 0;
+    this.radius = 200;
+    this.color = new Color();
+    this.create3DModel();
 }
 
 
@@ -32,37 +37,46 @@ World.prototype.renden = function renden( time ) {
 }
 
 
-World.prototype.factor = function factor( size, seed ) {
-    var color = null;
-    var radius = 100;
+World.prototype.create3DModel = function create3DModel() {
+    var a = 0, b = 0, n = 120;
+    var PI2 = 2 * Math.PI;
     var dot = null;
-    var x = 0,
-        y = -20,  
-        z = 0;
 
-    for ( var i = 0; i < size; ++i ) {
-        seed = (seed * 60 + i);
-        color = new Color();
-        color.hsv((seed * 0.1) % 360, 1, 1);
-
-        x = Math.sin((seed % 360) * Math.PI / 180) * radius;
-        z = Math.cos((seed % 360) * Math.PI / 180) * radius;
-
-        dot = new Particle3D(x, y, z, color);
-        dot.vx = 300 - Math.random() * 600;
-        dot.vy = 0 - Math.random() * 300;
-        //dot.vz = 300 - Math.random() * 600;
+    for ( var i = 0; i < n; ++i )
+    for ( var j = 0; j < n; ++j ) {
+        a = i * PI2 / n;
+        b = j * PI2 / n;
+        this.vertices.push( Math.cos(a) * 0.1, Math.sin(a) * Math.cos(b), Math.sin(a) * Math.sin(b) );
+    }
+}
 
 
-        this.particles[this.length++] = dot;
+World.prototype.factor = function factor( size, time ) {
+    var x  = 0,
+        y  = 0,
+        z  = 0,
+        dot  = null,
+        len  = this.vertices.length / 3;
+    var tx = 0,
+        ty = 0,
+        tz = 0;
+    
+    for ( var i = 0; i < size; ++i, ++this.index ) {
+        this.color.hsv( (this.index * 0.05) % 360, 0.5, 1);
+        this.index = (len + (this.index % len)) % len;
+
+        x = this.vertices[this.index * 3 + 0];
+        y = this.vertices[this.index * 3 + 1];
+        z = this.vertices[this.index * 3 + 2];
+
+        this.particles[this.length++] = new Particle3D(this.radius * y, this.radius * x, this.radius * z, this.color.value, 0xFF);;
     }
 }
 
 
 World.prototype.update = function update( time ) {
     var dot = null,
-        tmp = null,
-        len = 0;
+        tmp = null;
 
     var sa = 0, // 透视缩放比例；
 
@@ -76,6 +90,9 @@ World.prototype.update = function update( time ) {
         ex = 0, // 新 3D 位置投影；
         ey = 0;
 
+    var sin = Math.sin(time * 0.5),
+        cos = Math.cos(time * 0.5);
+        
     for ( var i = 0; i < this.length; ++i ) {
         dot = this.particles[i];
         /// 1，记录粒子的原始坐标；
@@ -85,10 +102,13 @@ World.prototype.update = function update( time ) {
 
         /// 2，叠加作用力，并更新粒子位置；
         dot.clearForce();
-
-        dot.force(0, 0, 0); // 重力加速度；
-
+        dot.force(dot.x * -0.5, dot.z * -0.25, dot.z * -0.5);
         dot.update(time);
+
+        /// 旋转;
+        dot.x = (dot.x * cos - dot.z * sin);
+        dot.z = (dot.x * sin + dot.z * cos)
+
 
         /// 3，原始 3D 位置投影；
         sa = this.focusLength / (this.focusLength + dz + this.zNear);
@@ -104,21 +124,19 @@ World.prototype.update = function update( time ) {
         /// 5，在原始位置投影以及新位置投影之间连线，用于显示速度向量的方向和大小；
         Bresenham.draw(this.bitmapdata, 
             Math.round(this.xOrigin + sx), Math.round(this.yOrigin + sy), 
-            Math.round(this.xOrigin + ex), Math.round(this.yOrigin + ey), dot.color.value, dot.alpha);
+            Math.round(this.xOrigin + ex), Math.round(this.yOrigin + ey), dot.color, dot.alpha);
 
-
+        
         /// 6，粒子生命为 0 时，从渲染队列中删除该粒子；
         if ( dot.life <= 0 ) {
             /// TODU: 因为数组的顺序不影响粒子渲染，所以使用交换要删除的粒子和数组中最后一个粒子的索引
             /// 的方法效率远远优于 `Array.splice()` 方法；
-            this.length = len = this.length - 1;
+            this.length -= 1;
 
-            if ( i != len ) {
+            if ( i != this.length ) {
                 /// TODU: 如果被删除的索引是数组中的最后一个有效索引，则只需要重定 `length` 指针；
-                tmp = this.particles[len];
-
-                this.particles[len] = this.particles[i];
-                this.particles[i  ] = tmp;
+                this.particles[i] = this.particles[this.length];
+                this.particles[this.length] = null;
             }
         }
     }

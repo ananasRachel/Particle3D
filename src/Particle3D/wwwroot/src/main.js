@@ -15,7 +15,8 @@ var cancel = require("./RAF").cancel;
 /// 舞台对象;
 var scale = 4;
 var composite  = "lighter"; 
-var stage = Utils.createCanvas(document.body.clientWidth, document.body.clientHeight);
+var stage = Utils.createCanvas(400, 400);
+//var stage = Utils.createCanvas(300, 300);
 var stageContext = stage.getContext("2d");
 
 var canvas = Utils.createCanvas(stage.width, stage.height);
@@ -30,7 +31,8 @@ var after = Utils.createCanvas(stage.width * 2 / scale, stage.height * 2 / scale
 var afterContext = after.getContext("2d");
 var afterMatrix  = new Matrix(2 / scale, 0, 0, 2 / scale, 0, 0);
 var afterMatrix2 = afterMatrix.scale(1 * scale, 1 * scale);
-var afterTransform = new ColorTransform(1 - 0.005, 1 - 0.005, 1 - 0.005, 1, 0, 0, 0, 0);
+var afterFactor = 1 - 0.025;
+var afterTransform = new ColorTransform(afterFactor, afterFactor, afterFactor, 1, 0, 0, 0, 0);
 
 
 /// 渲染；
@@ -43,10 +45,10 @@ function stageRendener( time ) {
     var time = getTimer();
     var lost = time - update; update = time; total += lost;
     var afterImg = null;
-
+    
     /// TODU: 渲染粒子；
     world.clear();
-    world.factor(100, total * 0.001);
+    world.factor(15, total * 0.001);
     world.renden(lost * 0.001);
 
     /// TODU: 闪烁光效；
@@ -62,16 +64,18 @@ function stageRendener( time ) {
     afterContext.setTransform(afterMatrix.a, afterMatrix.b, afterMatrix.c, afterMatrix.d, afterMatrix.tx, afterMatrix.ty);
     afterContext.drawImage(canvas, 0, 0);
     afterContext.restore();
+    
+
+    /// TODU: 背景应用模糊滤镜
+    stackBlurCanvasRGB(after, 0, 0, after.width, after.height, 1);
+
 
     /// TODU: 背景颜色加暗；
     afterImg = afterContext.getImageData(0, 0, after.width, after.height);
     afterTransform.apply(afterImg.data);
     afterContext.putImageData(afterImg, 0, 0);
 
-    /// TODU: 背景应用模糊滤镜
-    stackBlurCanvasRGB(after, 0, 0, after.width, after.height, 8)
     
-
     /// TODU: 图层混合；
     stageContext.clearRect(0, 0, stage.width, stage.height);
     stageContext.save();
@@ -85,11 +89,10 @@ function stageRendener( time ) {
     stageContext.restore();
 
     /// 测试标签；
-    canvasContext.fillStyle = "#fff";
-    canvasContext.fillText("canvas", 10, 20);
-    stageContext.fillStyle = "#fff";
-    stageContext.fillText("stage", 10, 20);
-
+    //canvasContext.fillStyle = "#fff";
+    //canvasContext.fillText("canvas", 10, 20);
+    //stageContext.fillStyle = "#fff";
+    //stageContext.fillText("stage", 10, 20);
 
     /// TODU: 执行下次渲染；
     handle = renden(stageRendener);
@@ -109,16 +112,17 @@ function stageRendener( time ) {
 
 
 /// 将舞台对象加入 `DOM` 显示对象列表;
-spark.style.width  = stage.width  + "px";
-spark.style.height = stage.height + "px";
-canvas.style.width  = stage.width  + "px";
-canvas.style.height = stage.height + "px";
-after.style.width  = stage.width  + "px";
-after.style.height = stage.height + "px";
+//spark.style.width  = stage.width  + "px";
+//spark.style.height = stage.height + "px";
+//canvas.style.width  = stage.width  + "px";
+//canvas.style.height = stage.height + "px";
+//after.style.width  = stage.width  + "px";
+//after.style.height = stage.height + "px";
 document.body.appendChild(stage);
 //document.body.appendChild(canvas);
 //document.body.appendChild(spark);
 //document.body.appendChild(after);
+
 
 
 /// 开启/关闭渲染；

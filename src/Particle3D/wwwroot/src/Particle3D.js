@@ -1,6 +1,5 @@
 ﻿/// <reference path='../lib/requirejs/require.js' />
 define(function( require, exports, module ) { "use strict";
-var Color = require("./Color");
 
 
 var Particle3D = function Particle3D( x, y, z, color, alpha ) {
@@ -21,12 +20,11 @@ var Particle3D = function Particle3D( x, y, z, color, alpha ) {
     this.fz = 0;
 
 
-    this.color = color || new Color(0); // 颜色&不透明度;
+    this.color = color || 0; // 颜色&不透明度;
     this.alpha = alpha || 255;
 
     this.life   = 1; // 生命周期;
-    this.energy = 1;
-    this.splot = 300;
+    this.energy = 0.085;
 }
 
 
@@ -57,11 +55,7 @@ Particle3D.prototype.update = function update( time ) {
 
     /// TODU: 更新生命周期；
     this.life = Math.max(0, this.life - this.energy * time);
-
-
-    /// TODU: 更新颜色；
     this.alpha = this.life * 0xFF;
-    this.color.h += this.splot * time;
 }
 
 
