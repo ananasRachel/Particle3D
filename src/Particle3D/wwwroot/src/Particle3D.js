@@ -25,7 +25,7 @@ var Particle3D = function Particle3D( x, y, z, color, alpha ) {
     this.alpha = alpha || 255;
 
     this.life   = 1; // 生命周期;
-    this.energy = 0.5;
+    this.energy = 1;
     this.splot = 300;
 }
 

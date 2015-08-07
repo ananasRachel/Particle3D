@@ -11,7 +11,7 @@ var World = function World( canvas, context ) {
     this.bitmapdata = null;
     this.length = 0;
     this.particles = [];
-    this.scaleOfVector = 2;
+    this.scaleOfVector = 1;
     this.focusLength = 800;
     this.zNear = 0;
     this.zFar  = 0;
@@ -43,15 +43,15 @@ World.prototype.factor = function factor( size, seed ) {
     for ( var i = 0; i < size; ++i ) {
         seed = (seed * 60 + i);
         color = new Color();
-        color.hsv(0, 1, 1);
+        color.hsv((seed * 0.1) % 360, 1, 1);
 
         x = Math.sin((seed % 360) * Math.PI / 180) * radius;
         z = Math.cos((seed % 360) * Math.PI / 180) * radius;
 
-        dot = new Particle3D(0, 0, 0, color);
+        dot = new Particle3D(x, y, z, color);
         dot.vx = 300 - Math.random() * 600;
-        dot.vy = 300 - Math.random() * 600;
-        dot.vz = 300 - Math.random() * 600;
+        dot.vy = 0 - Math.random() * 300;
+        //dot.vz = 300 - Math.random() * 600;
 
 
         this.particles[this.length++] = dot;
@@ -84,9 +84,9 @@ World.prototype.update = function update( time ) {
         dz = dot.z;
 
         /// 2，叠加作用力，并更新粒子位置；
-        //dot.clearForce();
+        dot.clearForce();
 
-        //dot.force(0, this.gravity, 0); // 重力加速度；
+        dot.force(0, 0, 0); // 重力加速度；
 
         dot.update(time);
 
