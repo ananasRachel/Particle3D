@@ -47,13 +47,15 @@ Bresenham.draw = function draw( dataImg, x0, y0, x1, y1, color, alpha ) {
 
 
 Bresenham.plot = function plot( dataImg, x, y, color, alpha ) {
-    var i = (x + (dataImg.width * y)) << 2;
+    var i = (x + (dataImg.width * y)) * 4;
     var data = dataImg.data;
 
-    data[i + 0] = (color >> 16) & 0xFF;
-    data[i + 1] = (color >> 8 ) & 0xFF;
-    data[i + 2] = (color >> 0 ) & 0xFF;
-    data[i + 3] = (alpha      ) & 0xFF;
+    if ( i < data.length ) {
+        data[i + 0] = (color >> 16) & 0xFF;
+        data[i + 1] = (color >> 8 ) & 0xFF;
+        data[i + 2] = (color >> 0 ) & 0xFF;
+        data[i + 3] = (alpha      ) & 0xFF;
+    }
 }
 
 

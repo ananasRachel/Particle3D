@@ -11,7 +11,12 @@ var TimerRef =
 
 function getTimer() {
     /// TODU: 确保第一次调用该函数时, 返回值: 0;
-    return timeInit <= 0 ? 0 : TimerRef.now() - timeInt;
+    if ( timeInit <= 0 ) {
+        timeInit = TimerRef.now();
+        return 0;
+    }
+
+    return TimerRef.now() - timeInit;
 }
 
 
