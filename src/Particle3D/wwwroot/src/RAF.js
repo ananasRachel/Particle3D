@@ -3,11 +3,11 @@ define(function( require, exports, module ) { "use strict";
 
 
 var renden = 
-    requestAnimationFrame       ||
-    webkitRequestAnimationFrame ||
-    mozRequestAnimationFrame    ||
-    msRequestAnimationFrame     ||
-    oRequestAnimationFrame      || (function ( callback ) {
+    window.requestAnimationFrame       ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame    ||
+    window.msRequestAnimationFrame     ||
+    window.oRequestAnimationFrame      || (function ( callback ) {
     /// requestAnimationFrame polyfill by Erik Möller
     /// fixes from Paul Irish and Tino Zijdel
     /// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
@@ -22,16 +22,16 @@ var renden =
 
 
 var cancel =
-    cancelAnimationFrame              ||
-    webkitCancelAnimationFrame        ||
-    mozCancelAnimationFrame           ||
-    msCancelAnimationFrame            ||
-    oCancelAnimationFrame             ||
-    webkitCancelRequestAnimationFrame ||
-    mozCancelRequestAnimationFrame    ||
-    msCancelRequestAnimationFrame     ||
-    oCancelRequestAnimationFrame      || 
-    clearTimeout;
+    window.cancelAnimationFrame              ||
+    window.webkitCancelAnimationFrame        ||
+    window.mozCancelAnimationFrame           ||
+    window.msCancelAnimationFrame            ||
+    window.oCancelAnimationFrame             ||
+    window.webkitCancelRequestAnimationFrame ||
+    window.mozCancelRequestAnimationFrame    ||
+    window.msCancelRequestAnimationFrame     ||
+    window.oCancelRequestAnimationFrame      || 
+    window.clearTimeout;
 
 
 var lastTime = 0;
