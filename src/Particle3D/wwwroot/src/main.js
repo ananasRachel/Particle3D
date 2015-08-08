@@ -52,7 +52,7 @@ function stageRendener( time ) {
     world.renden(lost * 0.001);
 
     /// TODU: 闪烁光效；
-    sparkContext.fillRect(0, 0, spark.width, spark.height);
+    sparkContext.clearRect(0, 0, spark.width, spark.height);
     sparkContext.save();
     sparkContext.setTransform(sparkMatrix.a, sparkMatrix.b, sparkMatrix.c, sparkMatrix.d, sparkMatrix.tx, sparkMatrix.ty);
     sparkContext.drawImage(canvas, 0, 0);
@@ -66,14 +66,16 @@ function stageRendener( time ) {
     afterContext.restore();
     
 
-    /// TODU: 背景应用模糊滤镜
-    stackBlurCanvasRGB(after, 0, 0, after.width, after.height, 1);
+    
 
 
     /// TODU: 背景颜色加暗；
     afterImg = afterContext.getImageData(0, 0, after.width, after.height);
     afterTransform.apply(afterImg.data);
     afterContext.putImageData(afterImg, 0, 0);
+
+    /// TODU: 背景应用模糊滤镜
+    stackBlurCanvasRGB(after, 0, 0, after.width, after.height, 1);
 
     
     /// TODU: 图层混合；
@@ -112,24 +114,25 @@ function stageRendener( time ) {
 
 
 /// 将舞台对象加入 `DOM` 显示对象列表;
-//spark.style.width  = stage.width  + "px";
-//spark.style.height = stage.height + "px";
-//canvas.style.width  = stage.width  + "px";
-//canvas.style.height = stage.height + "px";
-//after.style.width  = stage.width  + "px";
-//after.style.height = stage.height + "px";
+spark.style.width  = stage.width  + "px";
+spark.style.height = stage.height + "px";
+canvas.style.width  = stage.width  + "px";
+canvas.style.height = stage.height + "px";
+after.style.width  = stage.width  + "px";
+after.style.height = stage.height + "px";
 document.body.appendChild(stage);
-//document.body.appendChild(canvas);
-//document.body.appendChild(spark);
-//document.body.appendChild(after);
+document.body.appendChild(canvas);
+document.body.appendChild(spark);
+document.body.appendChild(after);
+//document.body.style.background = "#f5f5f5";
 
 
 
 /// 开启/关闭渲染；
-var isRendening = false;
-var handle = 0;
+var isRendening = true;
+var handle = renden(stageRendener);
 
-document.addEventListener("click", function( evt ) {
+stage.addEventListener("click", function( evt ) {
     isRendening = !isRendening;
 
     if ( isRendening ) {

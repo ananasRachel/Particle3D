@@ -19,7 +19,7 @@ var World = function World( canvas, context ) {
     this.yOrigin = this.canvas.height * 0.5;
     this.vertices = [];
     this.index = 0;
-    this.radius = 200;
+    this.radius = 300;
     this.color = new Color();
     this.create3DModel();
 }
