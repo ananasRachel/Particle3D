@@ -128,6 +128,7 @@ document.body.appendChild(after);
 
 
 
+
 /// 开启/关闭渲染；
 var isRendening = true;
 var handle = renden(stageRendener);
