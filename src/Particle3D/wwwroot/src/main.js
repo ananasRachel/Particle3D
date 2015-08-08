@@ -114,16 +114,16 @@ function stageRendener( time ) {
 
 
 /// 将舞台对象加入 `DOM` 显示对象列表;
-spark.style.width  = stage.width  + "px";
-spark.style.height = stage.height + "px";
-canvas.style.width  = stage.width  + "px";
-canvas.style.height = stage.height + "px";
-after.style.width  = stage.width  + "px";
-after.style.height = stage.height + "px";
+//spark.style.width  = stage.width  + "px";
+//spark.style.height = stage.height + "px";
+//canvas.style.width  = stage.width  + "px";
+//canvas.style.height = stage.height + "px";
+//after.style.width  = stage.width  + "px";
+//after.style.height = stage.height + "px";
 document.body.appendChild(stage);
-document.body.appendChild(canvas);
-document.body.appendChild(spark);
-document.body.appendChild(after);
+//document.body.appendChild(canvas);
+//document.body.appendChild(spark);
+//document.body.appendChild(after);
 //document.body.style.background = "#f5f5f5";
 
 
